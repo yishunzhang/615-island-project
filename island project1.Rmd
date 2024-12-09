@@ -1,0 +1,154 @@
+---
+title: "East Timor Analysis Report"
+author: "Yishun Zhang"
+date: "2024-12-05"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Overview
+
+This report presents an analysis of East Timor (Timor-Leste) using various data visualization and statistical methods implemented in R. The analysis includes:
+
+1.A general description of the island state with geographical maps and key facts.
+
+2.Relationships between GDP and key variables such as energy use, fixed capital consumption, and education.
+
+3.A comparison of East Timor's GDP with Australia in 2016.
+
+4.A SWOT analysis summarizing the strengths, weaknesses, opportunities, and threats of East Timor.
+
+Data Sources
+
+The data used in this analysis include:
+1.GDP, energy, fixed capital consumption, and education data for East Timor (2006-2016).
+
+2.GDP for Australia in 2016.
+
+3.Geographical information for mapping from the R maps package.
+
+Methods:
+1.Data wrangling and visualization were performed using R packages such as ggplot2 and dplyr.
+
+2.Interactive elements were implemented using the shiny package.
+
+3.Linear regression models were used to explore relationships between GDP and selected variables.
+
+Analysis Results
+
+1. General Description of East Timor:
+Geographical Overview:
+East Timor is located in Southeast Asia, occupying the eastern half of the island of Timor.
+
+Key Facts:
+Population: ~1.3 million
+Capital: Dili
+Official Languages: Tetum and Portuguese
+Currency: US Dollar
+
+Visualizations
+```{r, echo=FALSE}
+library(sf)
+library(ggplot2)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(tmap) 
+
+east_timor <- ne_countries(scale = "medium", country = "East Timor", returnclass = "sf")
+ggplot(data = east_timor) +
+  geom_sf(fill = "lightblue", color = "black") +
+  ggtitle("Map of East Timor") +
+  theme_minimal()
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+ggplot(data = world) +
+  geom_sf(fill = "gray90", color = "white") +
+  geom_sf(data = east_timor, fill = "red", color = "black") +
+  ggtitle("East Timor's Location in the World") +
+  theme_minimal()
+
+
+```
+
+2. Relationships Between GDP and Key Variables
+
+Energy vs. GDP
+A positive correlation between energy use and GDP is observed, suggesting that economic growth is tied to increased energy consumption.
+
+Fixed Capital Consumption vs. GDP
+Fixed capital consumption shows a moderate positive relationship with GDP.
+
+Education vs. GDP
+Education expenditure shows a weaker positive correlation with GDP.
+```{r, echo=FALSE}
+library(ggplot2)
+library(reshape2)
+
+set.seed(123)
+data <- data.frame(
+  year = 2006:2016,
+  gdp = c(1302.812,1972.995,3283.704,2520.363,3337.447,4596.139,4349.983,4169.791,3345.208,2805.437,2277.717),
+  energy = c(126.828,169.082,211.335,253.589,295.843,338.096,380.350,422.604,464.857,507.044,287.548),
+  Consumption_of_fixed_capital = c(18.039,23.446,29.987,41.048,46.759,56.280,63.922,80.364,88.011,110.706,111.194),
+  education = c(18.207,27.656,47.049,73.046,87.653,94.522,82.142,83.375,113.547,91.762,89.158)
+)
+ggplot(data, aes(x = energy, y = gdp)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  ggtitle("Effect of energy on GDP") +
+  xlab("Energy depletion") +
+  ylab("GDP") +
+  theme_minimal()
+
+ggplot(data, aes(x = Consumption_of_fixed_capital, y = gdp)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  ggtitle("Effect of Consumption_of_fixed_capital on GDP") +
+  xlab("Consumption of fixed capital") +
+  ylab("GDP") +
+  theme_minimal()
+
+ggplot(data, aes(x = education, y = gdp)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  ggtitle("Effect of education on GDP") +
+  xlab("education") +
+  ylab("GDP") +
+  theme_minimal()
+```
+3. Regional Comparison
+In 2016, East Timor's GDP was $2,277 million, compared to Australia's $1,208,000 million.
+
+4. SWOT Analysis
+Strengths:
+Significant petroleum and natural gas reserves.
+Rich cultural heritage and linguistic diversity.
+Growing tourism potential due to pristine beaches and coral reefs.
+
+Weaknesses:
+Heavy reliance on oil and gas revenues.
+Limited infrastructure and human capital.
+Vulnerability to natural disasters and climate change.
+
+Opportunities:
+Potential to develop ecotourism and cultural tourism.
+Renewable energy projects leveraging solar and wind power.
+Strengthening ties with international organizations for development aid.
+
+Threats:
+Economic instability due to fluctuating oil prices.
+Regional geopolitical tensions.
+Environmental degradation and biodiversity loss.
+
+Conclusion
+This analysis highlights East Timor's economic potential and challenges. While GDP has shown growth tied to energy consumption and fixed capital investments, the country faces infrastructural and political challenges. Comparing East Timor to Australia underscores the developmental gap, but opportunities for growth remain promising, particularly in tourism and resource management.
+
+References
+1.The data for Timor-Leste are from Wikipedia and Ceicdata. 
+2.Data for Australia comes from Google Chrome.
+
